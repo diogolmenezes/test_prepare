@@ -4,7 +4,8 @@
 var prepare = require('test_prepare')({
     mongo_host: 'host',
     fixtures_path: '/caminho'
-});```
+});
+```
 
 # Criando um arquivo de fixture pessoas.json
 
@@ -19,7 +20,8 @@ var prepare = require('test_prepare')({
              "nome": "maria"
         }
     ]
-}```
+}
+```
 
 # Iniciando uma nova instancia para teste importando a fixture
 
@@ -28,21 +30,24 @@ before(function (done) {
     prepare.start(['pessoas'], function () {
         done();
     });
-});```
+});
+```
 
 # Iniciando uma nova instancia para teste importando varias fixtures
 
 ```javascript
 prepare.start(['pessoas', 'carro', 'telefones'], function () {
     done();
-});```
+});
+```
 
 # Finalizando 
 
 ```javascript
 after(function () {
     prepare.end();
-});```
+});
+```
 
 # Middleware para manipulação das fixtures
 
@@ -57,7 +62,8 @@ prepare._importFixture('pessoa', function(data) {
 function() {
     .... aqui vc faz seu teste ...
     done();
-});```
+});
+```
 
 # Acessando dados importados das fixtures diretamente pela classe
 
@@ -71,5 +77,6 @@ prepare.start(['pessoas'], function () {
 it('meu teste', function(done) {
     var pessoas = prepare.fixture_pessoas;
     done();
-});```
+});
+```
 
