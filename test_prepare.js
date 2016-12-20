@@ -14,8 +14,7 @@ TestPrepare = function (config) {
 // da classe
 TestPrepare.prototype._connect = function () {
     var base = this;
-    if(this.mongoose.connection.readyState == 0)
-    {
+    if (this.mongoose.connection.readyState == 0) {
         this.mongo = this.mongoose.connect(this.mongo_uri, { user: this.mongo_user, pass: this.mongo_password }, function (err) {
             if (err)
                 console.log('Mongo Error =>', err);
@@ -40,7 +39,7 @@ TestPrepare.prototype._connect = function () {
 TestPrepare.prototype._importFixtures = function (fixtures, callback) {
     var base = this;
     for (var fixture of fixtures) {
-        this._importFixture(fixture, null, function(fixture) {
+        this._importFixture(fixture, null, function (fixture) {
             // libera o callback depois do import da ultima fixture
             if (fixture == fixtures[fixtures.length - 1])
                 callback();
@@ -54,12 +53,18 @@ TestPrepare.prototype._importFixture = function (fixture, middleware, callback) 
     this.fs.readFile(path, 'utf8', function (err, data) {
         item = JSON.parse(data);
 
-        if(middleware)
+        if (middleware)
             item = middleware(item);
 
         base.mongo.model(item.model).insertMany(item.fixtures, function (err, result) {
-            console.log(`Fixture [${fixture}] foi importada.`);
 
+            if (!err)
+                console.log(`Fixture [${fixture}] foi importada.`);
+            else
+                console.log(`Erro ao importar fixture [${fixture}] =>`, err);
+
+            console.log('FIXTURE IMPORT ERR =>', err);
+            console.log('FIXTURE IMPORT RESULT =>', result);
             // define uma propriedade do prepare com o conteudo da fixture
             base[`fixture_${fixture}`] = result;
 
@@ -69,18 +74,22 @@ TestPrepare.prototype._importFixture = function (fixture, middleware, callback) 
 };
 
 // Remove o banco de teste
-TestPrepare.prototype._clear = function () {
+TestPrepare.prototype._clear = function (done) {
     var isTestPrepareDatabase = this.mongo.connection.name.indexOf('test_prepare') != -1;
-    if(isTestPrepareDatabase)
-        this.mongo.connection.dropDatabase();
+    if (isTestPrepareDatabase)
+        this.mongo.connection.dropDatabase(done);
+    else
+        done();
 };
 
 // Inicia uma conexão, limpa o banco e importa os dados de teste
 TestPrepare.prototype.start = function (fixtures, done) {
+    var base = this;
     this._connect();
-    this._clear();
-    this._importFixtures(fixtures, function () {
-        done();
+    this._clear(function () {
+        base._importFixtures(fixtures, function () {
+            done();
+        });
     });
 };
 
