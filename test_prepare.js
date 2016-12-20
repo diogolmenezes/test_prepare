@@ -57,14 +57,9 @@ TestPrepare.prototype._importFixture = function (fixture, middleware, callback) 
             item = middleware(item);
 
         base.mongo.model(item.model).insertMany(item.fixtures, function (err, result) {
-
             if (!err)
                 console.log(`Fixture [${fixture}] foi importada.`);
-            else
-                console.log(`Erro ao importar fixture [${fixture}] =>`, err);
-
-            console.log('FIXTURE IMPORT ERR =>', err);
-            console.log('FIXTURE IMPORT RESULT =>', result);
+           
             // define uma propriedade do prepare com o conteudo da fixture
             base[`fixture_${fixture}`] = result;
 
