@@ -40,7 +40,7 @@ TestPrepare.prototype._connect = function () {
 TestPrepare.prototype._importFixtures = function (fixtures, callback) {
     var base = this;
     for (var fixture of fixtures) {
-        this._importFixture(fixture, null, function() {
+        this._importFixture(fixture, null, function(fixture) {
             // libera o callback depois do import da ultima fixture
             if (fixture == fixtures[fixtures.length - 1])
                 callback();
@@ -57,13 +57,13 @@ TestPrepare.prototype._importFixture = function (fixture, middleware, callback) 
         if(middleware)
             item = middleware(item);
 
-        base.mongo.model(item.model).insertMany(item.fixtures, function (result) {
+        base.mongo.model(item.model).insertMany(item.fixtures, function (err, result) {
             console.log(`Fixture [${fixture}] foi importada.`);
 
             // define uma propriedade do prepare com o conteudo da fixture
-            base[`fixture_${fixture}`] = item.fixtures;
+            base[`fixture_${fixture}`] = result;
 
-            callback();
+            callback(fixture);
         });
     });
 };
