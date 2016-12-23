@@ -1,4 +1,15 @@
 TestPrepare = function (config) {
+    var seeAt = 'See at https://github.com/diogolmenezes/test_prepare';
+
+    if (!config)
+        throw new TypeError(`You have to set options. ${seeAt}`);
+
+    if (!config.mongo_host)
+        throw new TypeError(`You have to set mongo_host. ${seeAt}`);
+
+    if (!config.fixtures_path)
+        throw new TypeError(`You have to set fixtures_path. ${seeAt}`);
+
     this.mongoose = require('mongoose');
     this.fs = require('fs');
     this.test_database = `my_test_prepare_database_${new Date().getTime()}`;
@@ -6,12 +17,9 @@ TestPrepare = function (config) {
     this.mongo_user = config.mongo_user || null;
     this.mongo_password = config.mongo_password || null;
     this.mongo_uri = `${this.mongo_host}/${this.test_database}`;
-
-    if(!config.fixtures_path)
-        throw 'You have to define test-prepare fixtures_path.';
-    else    
-        this.fixtures_path = config.fixtures_path;
+    this.fixtures_path = config.fixtures_path;
 };
+
 
 // Connects on database with config options 
 TestPrepare.prototype._connect = function () {
@@ -19,7 +27,7 @@ TestPrepare.prototype._connect = function () {
     if (this.mongoose.connection.readyState == 0) {
         this.mongo = this.mongoose.connect(this.mongo_uri, { user: this.mongo_user, pass: this.mongo_password }, function (err) {
             if (err)
-                console.log('Mongo Error =>', err);
+                throw err;
             else
                 console.log(`Mongo is connected on (${base.mongo_uri})!`);
         });
@@ -56,7 +64,7 @@ TestPrepare.prototype._importFixture = function (fixture, middleware, callback) 
     var base = this;
     var path = `${this.fixtures_path}/${fixture}.json`;
     this.fs.readFile(path, 'utf8', function (err, data) {
-        if(!err) {
+        if (!err) {
             item = JSON.parse(data);
 
             if (middleware)
@@ -65,7 +73,7 @@ TestPrepare.prototype._importFixture = function (fixture, middleware, callback) 
             base.mongo.model(item.model).insertMany(item.fixtures, function (err, result) {
                 if (!err)
                     console.log(`Fixture [${fixture}] foi importada.`);
-            
+
                 // sets fixture property with fixture imported data
                 base[`fixture_${fixture}`] = result;
 
