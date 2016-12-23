@@ -56,9 +56,7 @@ Example, people.json:
 
 ```javascript
 before(function (done) {
-    prepare.start(['fixture_file_name_without_extension', 'other_fixture_file_name_without_extension', '...'], function () {
-        done();
-    });
+    prepare.start(['fixture_file_name_without_extension', 'other_fixture_file_name_without_extension', '...']).then(done);
 });
 ```
 
@@ -66,9 +64,7 @@ So if you want to import your fixture file people.json:
 
 ```javascript
 before(function (done) {
-    prepare.start(['people'], function () {
-        done();
-    });
+    prepare.start(['people']).then(done);
 });
 ```
 
@@ -76,9 +72,7 @@ And importing many fixtures:
 
 ```javascript
 before(function (done) {
-    prepare.start(['people', 'cars', 'telephones'], function () {
-        done();
-    });
+    prepare.start(['people', 'cars', 'telephones']).then(done);
 });
 ```
 
@@ -87,8 +81,8 @@ before(function (done) {
 After test you can clean test data ro reset your test scenario. This uill drop test-prepare temporary database.
 
 ```javascript
-after(function () {
-    prepare.end();
+after(function (done) {
+    prepare.end().then(done);
 });
 ```
 
@@ -103,8 +97,8 @@ prepare._importFixture('people', function(data) {
     // change fixture data  through middleware then import to the database.
     data.fixtures[0].name = 'Jhon Doe';
     return data;
-},
-function() {
+})
+.then(() => {
     //.... here on callback, you make your test asserts ...
     var result = example_get_by_name('Jhon Doe');
     expect(result.length).to.be.equal(1);
@@ -117,8 +111,8 @@ function() {
 Whenever a fixture is imported, its data is accessible through the fixture_fixtureName property that is exposed in the test-prepare object.
 
 ```javascript
-prepare.start(['people', 'cars'], function () {
-    done();
+beforeEach(function (done) {
+    prepare.start(['people', 'cars']).then(done);
 });
 
 it('my test', function(done) {
