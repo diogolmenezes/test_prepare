@@ -6,7 +6,11 @@ TestPrepare = function (config) {
     this.mongo_user = config.mongo_user || null;
     this.mongo_password = config.mongo_password || null;
     this.mongo_uri = `${this.mongo_host}/${this.test_database}`;
-    this.fixtures_path = config.fixtures_path || `${__dirname}/../fixtures`;
+
+    if(!config.fixtures_path)
+        throw 'You have to define test-prepare fixtures_path.';
+    else    
+        this.fixtures_path = config.fixtures_path;
 };
 
 // Connects on database with config options 
@@ -52,20 +56,24 @@ TestPrepare.prototype._importFixture = function (fixture, middleware, callback) 
     var base = this;
     var path = `${this.fixtures_path}/${fixture}.json`;
     this.fs.readFile(path, 'utf8', function (err, data) {
-        item = JSON.parse(data);
+        if(!err) {
+            item = JSON.parse(data);
 
-        if (middleware)
-            item = middleware(item);
+            if (middleware)
+                item = middleware(item);
 
-        base.mongo.model(item.model).insertMany(item.fixtures, function (err, result) {
-            if (!err)
-                console.log(`Fixture [${fixture}] foi importada.`);
-           
-            // sets fixture property with fixture imported data
-            base[`fixture_${fixture}`] = result;
+            base.mongo.model(item.model).insertMany(item.fixtures, function (err, result) {
+                if (!err)
+                    console.log(`Fixture [${fixture}] foi importada.`);
+            
+                // sets fixture property with fixture imported data
+                base[`fixture_${fixture}`] = result;
 
-            callback(fixture);
-        });
+                callback(fixture);
+            });
+        }
+        else
+            throw err;
     });
 };
 

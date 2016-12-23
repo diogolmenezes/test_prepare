@@ -25,7 +25,7 @@ var prepare = require('test-prepare')({
 - mongo_user: User of MongoDB, not required
 - mongo_password: Password of MongoDB, not required
 - test_database: Name of temporary test database tha will be created by test-prepare, not required. Default my_test_prepare_database
-- fixtures_path: Path of fixtures folder. Default `${__dirname}/fixtures`
+- fixtures_path: Phisical path of fixtures folder, required. `Ex: ${__dirname}/../fixtures`
 
 
 # Create fixture file 
