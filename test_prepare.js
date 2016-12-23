@@ -1,7 +1,7 @@
 TestPrepare = function (config) {
     this.mongoose = require('mongoose');
     this.fs = require('fs');
-    this.test_database = 'my_test_prepare_database';
+    this.test_database = `my_test_prepare_database_${new Date().getTime()}`;
     this.mongo_host = config.mongo_host;
     this.mongo_user = config.mongo_user || null;
     this.mongo_password = config.mongo_password || null;
