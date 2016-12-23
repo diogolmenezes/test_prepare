@@ -6,7 +6,7 @@ Test-Prepare is a MondoDB test preparer. Is designed to clean and import test fi
 First install node.js and mongodb. Then
 
 ```shell
-$ npm install test-prepare
+$ npm install test-prepare --save-dev
 ```
 
 # Setup
