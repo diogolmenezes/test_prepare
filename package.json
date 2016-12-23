@@ -1,0 +1,45 @@
+{
+  "name": "test-prepare",
+  "description": "Test-Prepare is a MondoDB test preparer. Is designed to clean and import test fixtures before a test to simulate scenarios and go back to initial stage after test.",
+  "readmeFilename": "README.md" ,
+  "keywords": [
+    "test",
+    "mongo",
+    "mongoose",
+    "prepare",
+    "database",
+    "clean",
+    "cleaner",
+    "fixture",
+    "import"
+  ],
+  "tags": [
+    "test",
+    "mongo",
+    "mongoose",
+    "prepare",
+    "database",
+    "clean",
+    "cleaner",
+    "fixture",
+    "import"
+  ],
+  "version": "1.0.0",
+  "author": {
+    "name": "Diogo Menezes",
+    "email": "diogolmenezes@gmail.com",
+    "homepage": "https://github.com/diogolmenezes"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diogolmenezes/test_prepare"
+  },
+  "dependencies":{
+    "mongoose": "^4.6.8"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "main": "test_prepare.js"
+}

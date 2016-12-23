@@ -1,47 +1,90 @@
-# Importando a classe no arquivo de teste
+Test-Prepare is a MondoDB test preparer. Is designed to clean and import test fixtures before a test to simulate scenarios and go back to initial stage after test.
+
+# Installation
+
+First install node.js and mongodb. Then
+
+```shell
+$ npm install test-prepare
+```
+
+# Setup
+
+Import test-prepare in your test file.
 
 ```javascript
-var prepare = require('test_prepare')({
+var prepare = require('test-prepare')({
     mongo_host: 'host',
-    fixtures_path: '/caminho'
+    fixtures_path: '/path-to-fixtures'
 });
 ```
 
-# Criando um arquivo de fixture pessoas.json
+## Supported setup options
+
+- mongo_host: Host address of MongoDB, required
+- mongo_user: User of MongoDB, not required
+- mongo_password: Password of MongoDB, not required
+- test_database: Name of temporary test database tha will be created by test-prepare, not required. Default my_test_prepare_database
+- fixtures_path: Path of fixtures folder. Default `${__dirname}/fixtures`
+
+
+# Create fixture file 
+
+Inside fixtures folder, create a fixture file that will be imported to the test database.
+
+- model: Name od MongoDB collection
+- fixtures: Array of data that will be imported
+
+Example, people.json:
 
 ```json
 {
-    "model": "Pessoa",
+    "model": "People",
     "fixtures": [
         {
-             "nome": "diogo"
+             "name": "Jhon",
+             "age": 31
         },
         {
-             "nome": "maria"
+             "name": "Michael",
+             "age": 25
         }
     ]
 }
 ```
-
-# Iniciando uma nova instancia para teste importando a fixture
+# Prepare database before test
 
 ```javascript
 before(function (done) {
-    prepare.start(['pessoas'], function () {
+    prepare.start(['fixture_file_name_without_extension', 'other_fixture_file_name_without_extension', '...'], function () {
         done();
     });
 });
 ```
 
-# Iniciando uma nova instancia para teste importando varias fixtures
+So if you want to import your fixture file people.json:
 
 ```javascript
-prepare.start(['pessoas', 'carro', 'telefones'], function () {
-    done();
+before(function (done) {
+    prepare.start(['people'], function () {
+        done();
+    });
 });
 ```
 
-# Finalizando 
+And importing many fixtures:
+
+```javascript
+before(function (done) {
+    prepare.start(['people', 'cars', 'telephones'], function () {
+        done();
+    });
+});
+```
+
+# Dropping database after test
+
+After test you can clean test data ro reset your test scenario. This uill drop test-prepare temporary database.
 
 ```javascript
 after(function () {
@@ -49,33 +92,38 @@ after(function () {
 });
 ```
 
-# Middleware para manipulação das fixtures
+# Change fixture data before import
 
-Caso seja necessario alterar um dado de uma fixture antes de importar, basta usar o Middleware
+If you want change fixture data before import to the database, you can use the middleware function.
+
+prepare._importFixture('people', middleware, callback);
 
 ```javascript
-prepare._importFixture('pessoa', function(data) {
-    // manipulando a fixture através do middleware, dessa forma o dado incluido no banco já é o novo.
-    data.fixtures[0].nome = 'Diogo Menezes';
+prepare._importFixture('people', function(data) {
+    // change fixture data  through middleware then import to the database.
+    data.fixtures[0].name = 'Jhon Doe';
     return data;
 },
 function() {
-    .... aqui vc faz seu teste ...
+    //.... here on callback, you make your test asserts ...
+    var result = example_get_by_name('Jhon Doe');
+    expect(result.length).to.be.equal(1);
     done();
 });
 ```
 
-# Acessando dados importados das fixtures diretamente pela classe
+# Accessing fixture data 
 
-Sempre que uma fixture é importada, seus dados ficam acessíveis através da propriedade "fixture_nomedafixture" que é exposta no prepare.
+Whenever a fixture is imported, its data is accessible through the fixture_fixtureName property that is exposed in the test-prepare object.
 
 ```javascript
-prepare.start(['pessoas'], function () {
+prepare.start(['people', 'cars'], function () {
     done();
 });
 
-it('meu teste', function(done) {
-    var pessoas = prepare.fixture_pessoas;
+it('my test', function(done) {
+    var people = prepare.fixture_people;
+    var cars   = prepare.fixture_cars;
     done();
 });
 ```
