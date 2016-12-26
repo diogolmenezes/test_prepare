@@ -7,3 +7,8 @@
 ==================
 
 - Now we have verbose mode, to see some important debug informations about test-prepare, see documentation at https://github.com/diogolmenezes/test_prepare
+
+1.2.4 - 26/12/2016
+==================
+
+- Bug fixes and unit test improvements
