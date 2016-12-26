@@ -23,7 +23,7 @@
     "fixture",
     "import"
   ],
-  "version": "1.2.3",
+  "version": "1.2.4",
   "author": "Diogo Menezes <diogolmenezes@gmail.com>",
   "repository": {
     "type": "git",
@@ -42,10 +42,11 @@
   },
   "homepage": "https://github.com/diogolmenezes/test_prepare#readme",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha -R spec --timeout 5000 "
+    "test": "clear;node_modules/mocha/bin/mocha -R spec --timeout 5000 "
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "sinon": "^1.17.6"
   }
 }

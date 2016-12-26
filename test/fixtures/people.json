@@ -1,0 +1,13 @@
+{ 
+    "model": "People",
+    "fixtures":[
+        {
+           "name": "Jhon Snow",
+           "age": 22
+        },
+        {
+           "name": "Tyrion Lannister",
+           "age": 30
+        }
+    ]
+}
