@@ -1,7 +1,7 @@
 "use strict"
 
 var expect = require('chai').expect;
-var sinon  = require('sinon');
+var sinon = require('sinon');
 var config = require('../config/prepare-config');
 var test_config = require('./util/test_config');
 
@@ -61,7 +61,18 @@ describe('Test Prepare', () => {
                 .then(() => {
                     expect(prepare.mongo).to.be.ok;
                     done();
-                });                
+                });
+        });
+    });
+
+    describe('Drop workflow', () => {
+        let prepare = require('../lib/test_prepare')({
+            mongo_host: test_config.mongo_host,
+            fixtures_path: `${__dirname}/fixtures`
+        });
+
+        before((done) => {
+            prepare.start().then(done);
         });
 
         it('Must drop mongo database', (done) => {
@@ -69,7 +80,7 @@ describe('Test Prepare', () => {
                 .then(() => {
                     expect(prepare.mongo).to.be.ok;
                     done();
-                });                
+                });
         });
 
         it('Must write drop log if verbose mode', (done) => {
@@ -81,7 +92,7 @@ describe('Test Prepare', () => {
                     spy.restore();
                     prepare.verbose = false;
                     done();
-                });                
+                });
         });
     });
 
@@ -145,7 +156,7 @@ describe('Test Prepare', () => {
             fixtures_path: `${__dirname}/fixtures`
         });
 
-        beforeEach((done) => {
+        before((done) => {
             prepare.start().then(done);
         });
 
@@ -160,7 +171,7 @@ describe('Test Prepare', () => {
         });
     });
 
-    describe('Log', () => {        
+    describe('Log', () => {
         let prepare = require('../lib/test_prepare')({
             mongo_host: test_config.mongo_host,
             fixtures_path: `${__dirname}/fixtures`
@@ -174,7 +185,7 @@ describe('Test Prepare', () => {
             spy.restore();
             prepare.verbose = false;
             done();
-        });  
+        });
 
         it('Must not log if vebose is false', (done) => {
             var spy = sinon.spy(console, 'log');
@@ -183,7 +194,7 @@ describe('Test Prepare', () => {
             expect(spy.callCount).to.be.equal(0);
             spy.restore();
             done();
-        });         
+        });
     });
 
     describe('Fixtures', () => {
@@ -202,7 +213,7 @@ describe('Test Prepare', () => {
 
         it('Must import fixture', (done) => {
             prepare.mongo.model('People')
-                .find({}, function(err, result) {
+                .find({}, function (err, result) {
                     expect(result.length).to.be.equal(2);
                     done();
                 });
@@ -210,18 +221,18 @@ describe('Test Prepare', () => {
 
         it('Must import fixture with right data', (done) => {
             prepare.mongo.model('People')
-                .find({}, function(err, result) {
+                .find({}, function (err, result) {
                     expect(result[0].name).to.be.equal('Jhon Snow');
                     done();
                 });
         });
 
-        it('Must create property with fixture data when import fixture', (done) => {            
+        it('Must create property with fixture data when import fixture', (done) => {
             expect(prepare.fixture_people.length).to.be.equal(2);
             done();
         });
 
-        it('Must create property with right fixture data when import fixture', (done) => {            
+        it('Must create property with right fixture data when import fixture', (done) => {
             expect(prepare.fixture_people[0].name).to.be.equal('Jhon Snow');
             expect(prepare.fixture_people[1].name).to.be.equal('Tyrion Lannister');
             done();
