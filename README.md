@@ -16,7 +16,8 @@ Import test-prepare in your test file.
 ```javascript
 var prepare = require('test-prepare')({
     mongo_host: 'http://localhost:27017',
-    fixtures_path: '/path-to-fixtures'
+    fixtures_path: '/path-to-fixtures',
+    verbose: true
 });
 ```
 
@@ -26,6 +27,7 @@ var prepare = require('test-prepare')({
 - mongo_user: User of MongoDB, not required
 - mongo_password: Password of MongoDB, not required
 - fixtures_path: Phisical path of fixtures folder, required. `Ex: ${__dirname}/../fixtures`
+- verbose: Enable verbose mode. This will log test prepare info and feedbacks about connection and fixtures imports. Default is false.
 
 
 # Create fixture file 
