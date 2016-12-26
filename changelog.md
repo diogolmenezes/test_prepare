@@ -12,3 +12,8 @@
 ==================
 
 - Bug fixes and unit test improvements
+
+1.2.5 - 26/12/2016
+==================
+
+- Bug fixes and unit test improvements
