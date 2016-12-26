@@ -160,6 +160,32 @@ describe('Test Prepare', () => {
         });
     });
 
+    describe('Log', () => {        
+        let prepare = require('../lib/test_prepare')({
+            mongo_host: test_config.mongo_host,
+            fixtures_path: `${__dirname}/fixtures`
+        });
+
+        it('Must use [Test Prepare =>] prefix', (done) => {
+            var spy = sinon.spy(console, 'log');
+            prepare.verbose = true;
+            prepare._log('My Log');
+            expect(spy.calledWith('Test Prepare => My Log')).to.be.ok;
+            spy.restore();
+            prepare.verbose = false;
+            done();
+        });  
+
+        it('Must not log if vebose is false', (done) => {
+            var spy = sinon.spy(console, 'log');
+            prepare.verbose = false;
+            prepare._log('My Log');
+            expect(spy.callCount).to.be.equal(0);
+            spy.restore();
+            done();
+        });         
+    });
+
     describe('Fixtures', () => {
         let prepare = require('../lib/test_prepare')({
             mongo_host: test_config.mongo_host,
