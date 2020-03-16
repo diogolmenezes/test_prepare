@@ -30,7 +30,7 @@
     "url": "git+https://github.com/diogolmenezes/test_prepare.git"
   },
   "dependencies": {
-    "mongoose": "^4.6.8"
+    "mongoose": "^5.0.0"
   },
   "license": "MIT",
   "engines": {
